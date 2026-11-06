@@ -1,42 +1,31 @@
 # WDYT
 
-WDYT is a space to exchange questions and perspectives and build a record for self-understanding.
+질문과 생각을 나누고, 스스로를 더 잘 이해할 수 있도록 기록하는 공간입니다.
 
-## Implemented
+## 기능
 
-- Email sign-up and sign-in with Supabase Auth
-- Browse public questions by the five initial topics, newest first
-- Write questions with independent public/private visibility
-- Read public answers and post an answer with its own visibility setting
-- Row-level security keeps private questions and answers visible only to their owner (and a private question's owner can read its answers)
-- Save questions to a personal journal; view your questions and answers; change their visibility
-- Edit a profile with a private-by-default public visibility option
-- React to public answers with helpful, relate, or new-perspective reactions
-- Translate public answers between Korean and English; original text is retained and translations are cached separately
-- Add a language and optional ISO 3166-1 alpha-2 country code to questions; filter discovery by either
-- Translate public questions between Korean and English while keeping their originals intact
-- Track saved questions as to-answer, answered, or revisit; compare the first and latest answers to the same question
-- Block accounts and manage the blocked list; blocked users cannot see each other's public content
-- Report public questions and answers; a short content excerpt is retained for moderation review
-- Delete a question by hiding it publicly and replacing its text with a tombstone; answers remain available in each author's own journal
-- Delete an individual answer permanently from its author's journal
-- Ask new accounts to choose a preferred translation language and optional country before using the journal
-- Refresh question and answer lists after submission, show the new entry immediately, and prevent duplicate submissions
-- Hide reaction controls on a user's own answers and show reaction results immediately
-- Review reports through a moderator-only dashboard; review outcomes record the moderator and time
+### 질문과 답변
 
-## Run locally
+- 다섯 가지 주제별로 공개 질문을 최신순으로 확인할 수 있습니다.
+- 질문과 답변을 작성하고 각각 공개 또는 비공개로 설정할 수 있습니다.
+- 질문에 언어와 선택 국가를 지정하고, 언어나 국가별로 질문을 찾아볼 수 있습니다.
+- 질문을 저장하고 답변할 질문, 답변한 질문, 다시 살펴볼 질문으로 구분할 수 있습니다.
+- 같은 질문에 작성한 첫 답변과 최신 답변을 비교할 수 있습니다.
+- 내 질문과 답변을 모아보고 공개 범위를 변경할 수 있습니다.
+- 프로필 공개 여부를 설정할 수 있으며, 기본값은 비공개입니다.
+- 질문을 삭제하면 공개 목록에서 숨기고 원문을 삭제 표시로 바꿉니다. 답변은 각 작성자의 기록에서 확인할 수 있습니다.
+- 답변은 작성자의 기록에서 개별적으로 삭제할 수 있습니다.
 
-1. Install Node.js 20.9 or newer.
-2. Create a Supabase project and run [`supabase/schema.sql`](supabase/schema.sql) in its SQL Editor.
-3. Copy `.env.example` to `.env.local` and set the project URL and anon key from Supabase.
-4. In Supabase Auth settings, configure the local site URL as `http://localhost:3000` and choose the email confirmation behavior you want.
-5. Run `npm install`, then `npm run dev`, and open `http://localhost:3000`.
+### 커뮤니티와 안전
 
-The browser uses only the Supabase publishable key. Never place a service-role key or translation provider key in `NEXT_PUBLIC_*` or client code. Public discovery and authenticated writes are protected by the SQL row-level policies. Re-run the complete `supabase/schema.sql` after updating this project so the latest tables, columns, and policies are applied; the script is designed to be rerun without deleting existing records.
+- 공개 답변에 공감, 공감대, 새로운 관점 반응을 남길 수 있습니다.
+- 다른 계정을 차단하고 차단 목록을 관리할 수 있습니다. 차단한 계정끼리는 서로의 공개 콘텐츠를 볼 수 없습니다.
+- 공개 질문과 답변을 신고할 수 있습니다.
+- 운영자는 전용 대시보드에서 신고를 확인하고 검토, 기각 또는 조치 완료로 표시할 수 있습니다. 검토 결과에는 담당 운영자와 처리 시간이 기록됩니다.
+- 비공개 질문과 답변은 작성자만 볼 수 있으며, 비공개 질문의 작성자는 해당 질문의 답변도 볼 수 있습니다.
 
-Answer translation uses DeepL's Free API endpoint by default. Add a DeepL API key to `DEEPL_API_KEY` and the Supabase server secret to `SUPABASE_SERVICE_ROLE_KEY` in `.env.local`; both stay server-side. The API route requires a signed-in user, only translates public answers on public questions, caches translations, and limits each account to 30 new translations per 24 hours. Change `DEEPL_API_BASE_URL` to `https://api.deepl.com` for a DeepL API Pro key.
+### 번역과 계정
 
-## Moderator setup
-
-Set `MODERATOR_USER_IDS` in `.env.local` to a comma-separated list of trusted Supabase Auth user UUIDs. The moderation API verifies the signed-in user's token and checks this server-only allowlist before using the server secret to read or update reports. Never put moderator IDs or server secrets in `NEXT_PUBLIC_*`. Restart the app after changing the allowlist. Moderators can mark reports reviewed, dismissed, or actioned; these labels record a decision and do not automatically delete content or suspend accounts. A question deletion removes its original question text while preserving answers in their authors' journals.
+- 이메일로 가입하고 로그인할 수 있습니다.
+- 새 계정은 기록 기능을 이용하기 전에 번역 언어와 선택 국가를 설정합니다.
+- 공개 질문과 답변을 한국어와 영어 사이에서 번역할 수 있습니다. 원문은 보존되며 번역 결과는 별도로 저장됩니다.
